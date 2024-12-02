@@ -1,32 +1,25 @@
-split :: String -> Char -> [String]
-split s d =
-    case dropWhile (== d) s of
-        "" -> []
-        s' -> w : split s'' d
-            where (w, s'') = break (== d) s'
+import Data.List (sort)
 
-isSafeReport :: [Int] -> Bool
-isSafeReport list
-    | all isNegative list = length (filter (>= -3) list) >= (length list - 1)
-    | all isPositive list = length (filter (<= 3) list) >= (length list - 1)
-    | otherwise = False
-    where
-        isPositive x = x > 0
-        isNegative x = x < 0
+isGood :: [Int] -> Bool
+isGood xs =
+    incOrDec && all (\(a, b) -> 1 <= abs (a - b) && abs (a - b) <= 3) pairs
+  where
+    sortedXs = sort xs
+    incOrDec = xs == sortedXs || xs == reverse sortedXs
+    pairs = zip xs (tail xs)
+
+processLine :: Int -> String -> Int
+processLine count line = newCount
+  where
+    xs1 = map read (words line)
+    newCount =
+        if any (isGood . (\j -> take j xs1 ++ drop (j + 1) xs1))
+               [0 .. length xs1 - 1]
+            then count + 1
+            else count
 
 main :: IO ()
 main = do
-    contents <- readFile "d2/input.txt"
-    let reports =
-            [ [read n :: Int | n <- split line ' ']
-            | line <- split contents '\n'
-            ]
-    let differences =
-            filter
-                isSafeReport
-                [ [ report !! (i + 1) - report !! i
-                | i <- [0 .. length report - 2]
-                ]
-                | report <- reports
-                ]
-    print (length differences)
+    content <- readFile "d2/input.txt"
+    let linesList = lines content
+    print $ foldl processLine 0 linesList

@@ -10,9 +10,9 @@ isSafeReport list
     | all isNegative list = length (filter (>= -3) list) == length list
     | all isPositive list = length (filter (<= 3) list) == length list
     | otherwise = False
-    where
-        isPositive x = x > 0
-        isNegative x = x < 0
+  where
+    isPositive x = x > 0
+    isNegative x = x < 0
 
 main :: IO ()
 main = do
