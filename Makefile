@@ -13,3 +13,10 @@ day3:
 day4:
 	ghc d4/part_one.hs -o day4_p1
 	ghc d4/part_two.hs -o day4_p2
+
+day5:
+	ghc d5/part_one.hs -o day5_p1
+	ghc d5/part_two.hs -o day5_p2
+
+fclean:
+	rm -f day*
